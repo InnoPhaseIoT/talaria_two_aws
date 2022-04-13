@@ -1,0 +1,100 @@
+diff --git a/include/aws_iot_log.h b/include/aws_iot_log.h
+index 60c26086..47e2b476 100644
+--- a/include/aws_iot_log.h
++++ b/include/aws_iot_log.h
+@@ -33,7 +33,7 @@ extern "C" {
+ #endif
+ 
+ #include <stdio.h>
+-#include <stdlib.h>
++#include <kernel/os.h>
+ 
+ /**
+  * @brief Debug level logging macro.
+@@ -43,9 +43,9 @@ extern "C" {
+ #ifdef ENABLE_IOT_DEBUG
+ #define IOT_DEBUG(...)    \
+ 	{\
+-	printf("DEBUG:   %s L#%d ", __func__, __LINE__);  \
+-	printf(__VA_ARGS__); \
+-	printf("\n"); \
++	os_printf("DEBUG:   %s L#%d ", __func__, __LINE__);  \
++	os_printf(__VA_ARGS__); \
++	os_printf("\n"); \
+ 	}
+ #else
+ #define IOT_DEBUG(...)
+@@ -59,15 +59,15 @@ extern "C" {
+ #ifdef ENABLE_IOT_TRACE
+ #define FUNC_ENTRY    \
+ 	{\
+-	printf("FUNC_ENTRY:   %s L#%d \n", __func__, __LINE__);  \
++	os_printf("FUNC_ENTRY:   %s L#%d \n", __func__, __LINE__);  \
+ 	}
+ #define FUNC_EXIT    \
+ 	{\
+-	printf("FUNC_EXIT:   %s L#%d \n", __func__, __LINE__);  \
++	os_printf("FUNC_EXIT:   %s L#%d \n", __func__, __LINE__);  \
+ 	}
+ #define FUNC_EXIT_RC(x)    \
+ 	{\
+-	printf("FUNC_EXIT:   %s L#%d Return Code : %d \n", __func__, __LINE__, x);  \
++	os_printf("FUNC_EXIT:   %s L#%d Return Code : %d \n", __func__, __LINE__, x);  \
+ 	return x; \
+ 	}
+ #else
+@@ -85,8 +85,8 @@ extern "C" {
+ #ifdef ENABLE_IOT_INFO
+ #define IOT_INFO(...)    \
+ 	{\
+-	printf(__VA_ARGS__); \
+-	printf("\n"); \
++	os_printf(__VA_ARGS__); \
++	os_printf("\n"); \
+ 	}
+ #else
+ #define IOT_INFO(...)
+@@ -100,9 +100,9 @@ extern "C" {
+ #ifdef ENABLE_IOT_WARN
+ #define IOT_WARN(...)   \
+ 	{ \
+-	printf("WARN:  %s L#%d ", __func__, __LINE__);  \
+-	printf(__VA_ARGS__); \
+-	printf("\n"); \
++	os_printf("WARN:  %s L#%d ", __func__, __LINE__);  \
++	os_printf(__VA_ARGS__); \
++	os_printf("\n"); \
+ 	}
+ #else
+ #define IOT_WARN(...)
+@@ -116,9 +116,9 @@ extern "C" {
+ #ifdef ENABLE_IOT_ERROR
+ #define IOT_ERROR(...)  \
+ 	{ \
+-	printf("ERROR: %s L#%d ", __func__, __LINE__); \
+-	printf(__VA_ARGS__); \
+-	printf("\n"); \
++	os_printf("ERROR: %s L#%d ", __func__, __LINE__); \
++	os_printf(__VA_ARGS__); \
++	os_printf("\n"); \
+ 	}
+ #else
+ #define IOT_ERROR(...)
+diff --git a/src/aws_iot_shadow.c b/src/aws_iot_shadow.c
+index 5c69edb0..6a0f8cf4 100644
+--- a/src/aws_iot_shadow.c
++++ b/src/aws_iot_shadow.c
+@@ -32,11 +32,13 @@ extern "C" {
+ #include "aws_iot_shadow_key.h"
+ #include "aws_iot_shadow_records.h"
+ 
++/*
+ const ShadowInitParameters_t ShadowInitParametersDefault = {(char *) AWS_IOT_MQTT_HOST, AWS_IOT_MQTT_PORT, NULL, NULL,
+ 															NULL, false, NULL};
+ 
+ const ShadowConnectParameters_t ShadowConnectParametersDefault = {(char *) AWS_IOT_MY_THING_NAME,
+ 								  (char *) AWS_IOT_MQTT_CLIENT_ID, 0, NULL};
++*/
+ 
+ static char deleteAcceptedTopic[MAX_SHADOW_TOPIC_LENGTH_BYTES];
+ 
