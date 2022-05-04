@@ -35,9 +35,9 @@ git clone --recursive https://github.com/InnoPhaseInc/talaria_two_aws.git
 ### Patching the 'AWS IoT Device SDK Embedded C' for Talaria TWO SDK Compatibility
 - After the clone is complete as described in previous step, please move the folder 'talaria_two_aws' to the path `<sdk_path>/apps/`.
 
-- Then go (cd) to the directory `<sdk_path>/apps/talaria_two_aws` and run the below script to patch AWS IoT Device SDK for Talaria TWO compatibility.
+- Then go (cd) to the directory `<sdk_path>/apps/talaria_two_aws/aws-iot-device-sdk-embedded-C` and run the below command to patch AWS IoT Device SDK for Talaria TWO compatibility.
 ``` bash
-<sdk_path>/apps/talaria_two_aws$ sh apply_t2_compatibility_patch.sh
+<sdk_path>/apps/talaria_two_aws/aws-iot-device-sdk-embedded-C$ git apply ../patches/t2_compatibility.patch
 ```
 
 - Please note that patching needs to be done only once after the clone is successful.
@@ -59,7 +59,6 @@ The repo `talaria_two_aws` has the below directories/files:
 
 - directory `aws-iot-device-sdk-embedded-C`- Contains the AWS IoT Device SDK Embedded-C Release Tag v3.1.5.
 - directory `patches` - Contains patch file `t2_compatibility.patch` for AWS IoT Device SDK V3.1.5 for Talaria TWO compatibility.
-- file `apply_t2_compatibility_patch.sh`- Applies the patch to AWS IoT Device SDK V3.1.5 for Talaria TWO compatibility.
 - directory `talaria_two_pal`- Its ‘Platform Adaptation Layer’ and contains Talaria TWO Platform specific porting needed to adapt to AWS IoT SDK.
 - directory `samples`- Samples provided by the AWS IoT SDK covering Thing Shadow, Jobs and Subscribe/Publish which are ported to Talaria TWO. Changes done for porting the sample Apps are related to APIs used to connect to the network, passing connection params as boot arguments and using rootFS for storing the certs and keys.
 - directory `root`: Provides the sample rootFS folder structure to be used while programming the AWS certs and keys to EVB-A for talaria_two_aws Sample Application.
