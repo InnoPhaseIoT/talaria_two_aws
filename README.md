@@ -40,10 +40,10 @@ git clone --recursive https://github.com/InnoPhaseInc/talaria_two_aws.git
 <sdk_path>/apps/talaria_two_aws/aws-iot-device-sdk-embedded-C$ git apply ../patches/t2_compatibility.patch
 ```
 
-- Please note that patching needs to be done only once after the clone is successful.
+- **Please note that patching needs to be done only once after the clone is successful.**
 
 ### Compiling the AWS IoT SDK and the Sample Apps
-- Once the script for the patching is run successfully, running Make from `<sdk_path>/apps/talaria_two_aws` will compile the 'AWS IoT SDK' along with the Talaria TWO specific 'Platform Adaptation Layer' and 'Sample Applications' ported to Talaria TWO.
+- Once the patch is applied successfully, running Make from `<sdk_path>/apps/talaria_two_aws` will compile the 'AWS IoT SDK' along with the Talaria TWO specific 'Platform Adaptation Layer' and 'Sample Applications' ported to Talaria TWO.
 
 - On running make, the binaries for the Sample Apps will be created in the path `<sdk_path>/apps/talaria_two_aws/out`.
 
