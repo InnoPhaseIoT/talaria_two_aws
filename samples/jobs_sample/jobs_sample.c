@@ -506,21 +506,21 @@ int read_certs()
 	int pkey_len = 0;
 	int cert_len = 0;
 
-	aws_root_ca = utils_file_get("/root/certs/aws/app/aws_root_ca", &root_ca_len);
+	aws_root_ca = utils_file_get(MOUNT_PATH "certs/aws/app/aws_root_ca", &root_ca_len);
 	//os_printf("read_certs() : root ca file size is %d bytes\n", root_ca_len);
 	if(aws_root_ca == NULL)
 	{
 		return -1;
 	}
 
-	aws_device_pkey = utils_file_get("/root/certs/aws/app/aws_device_pkey", &pkey_len);
+	aws_device_pkey = utils_file_get(MOUNT_PATH "certs/aws/app/aws_device_pkey", &pkey_len);
 	//os_printf("read_certs() : device private key file zize is %d bytes\n", pkey_len);
 	if(aws_device_pkey == NULL)
 	{
 		return -1;
 	}
 
-	aws_device_cert = utils_file_get("/root/certs/aws/app/aws_device_cert", &cert_len);
+	aws_device_cert = utils_file_get(MOUNT_PATH "certs/aws/app/aws_device_cert", &cert_len);
 	//os_printf("read_certs() : device cert file size is %d bytes\n", cert_len);
 	if(aws_device_cert == NULL)
 	{
