@@ -5,6 +5,7 @@
 - [Introduction](#introduction)
 - [Getting Started with the SDK](#get-started)
 - [Overview of Sample Applications](#sample-apps)
+- [Releases](#releases)
 
 ## Introduction
 
@@ -188,4 +189,43 @@ In the main body you can see how each callback is registered for each correspond
 The application takes in ssid, passphrase, aws host name, aws port and thing name as must provide bootArgs and suspend as optional bootArgs.
 
 Certs and keys are stored in rootFS and read from app specific paths defined in the sample code.
+
+
+## Releases
+
+<a name="releases"></a>
+
+New features and bug fixes will be offered by both the SDKs (Talaria TWO SDK and AWS IoT Device SDK Embedded C).
+
+When a new SDK for Talaria TWO is released, a release from this Repo will be made to support that.
+
+Also, when a new version is ported from AWS IoT Device SDK Embedded C, a release from this Repo will be made to support that.
+
+Releases made from this Repo will be 'tagged-releases' and each release-tag will have the relevant info about respective Talaria TWO SDK version and AWS IoT Device SDK Embedded C version supported by that particular release from this Repo.
+
+### For Example
+
+Tag "v1.0.0_TalariaTWO_SDK_2.4" has the following description --
+```
+builds with - 'Talaria TWO SDK 2.4'
+
+based on - AWS IoT Device SDK Embedded C - release tag version v.3.1.5
+```
+and
+
+Tag "v1.1.0_TalariaTWO_SDK_2.5" has the following description --
+```
+builds with - 'Talaria TWO SDK 2.5'
+
+based on - AWS IoT Device SDK Embedded C - release tag version v.3.1.5
+```
+The versioning `vx.y.z_TalariaTWO_SDK_m.n.o` follows semantic versioning, vx.y.z. or major.minor.patch.
+
+Supported Talaria TWO SDK version is added with a `_TalariaTWO_SDK_m.n.o` to `vx.y.z`.
+
+A port to a newer version from AWS IoT Device SDK Embedded C will bump the major version `x` and reset the minor version `y` and patch version `z` to 0.
+
+A new TalariaTWO SDK Release support will bump the minor version `y` and reset the patch version `z` to 0, while the major version `x` remains the same.
+
+A critical bug fix will bump the patch version `z` only.
 
