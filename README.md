@@ -13,7 +13,7 @@
 
 [AWS IoT Device SDK Embedded-C Release Tag v3.1.5](https://github.com/aws/aws-iot-device-sdk-embedded-C/tree/v3.1.5) is ported on Talaria TWO Software Development Kit as per the porting guidelines.
 
-Using this, the users can now start developing exciting [ultra-low power IoT solutions on Talaria TWO family of devices](https://innophaseinc.com/talaria-technology-details/), utilizing the power of the AWS IoT Core platform and its services.
+Using this, the users can now start developing exciting [ultra-low power IoT solutions on Talaria TWO family of devices](https://innophaseiot.com/talaria-technology-details/), utilizing the power of the AWS IoT Core platform and its services.
 
 More information on aws-iot-device-sdk-embedded-C release tag v3.1.5 can be found here:
 [https://github.com/aws/aws-iot-device-sdk-embedded-C/tree/v3.1.5](https://github.com/aws/aws-iot-device-sdk-embedded-C/tree/v3.1.5)
@@ -28,7 +28,7 @@ API Documentation and other details specific to AWS IoT Device SDK Embedded C re
 ### Cloning the 'talaria_two_aws' repository
 - Create a new folder in any place and clone the 'talaria_two_aws' repo using below command
 ``` bash
-git clone --recursive https://github.com/InnoPhaseInc/talaria_two_aws.git
+git clone --recursive https://github.com/InnoPhaseIoT/talaria_two_aws.git
 ```
 > This repo uses [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) for it's dependencies. The option '--recursive' is required to clone git submodule repos needed by 'talaria_two_aws' repo.
 
@@ -46,11 +46,11 @@ git clone --recursive https://github.com/InnoPhaseInc/talaria_two_aws.git
 ### Compiling the AWS IoT SDK and the Sample Apps
 - Once the patch is applied successfully, running Make from `<sdk_path>/apps/talaria_two_aws` will compile the 'AWS IoT SDK' along with the Talaria TWO specific 'Platform Adaptation Layer' and 'Sample Applications' ported to Talaria TWO.
 
-- On running make, the binaries for the Sample Apps will be created in the path `<sdk_path>/apps/talaria_two_aws/out`.
+- On running make, the binaries for the various Sample Apps will be created in folder 'out' in their individual path, e.g. `<sdk_path>/apps/talaria_two_aws/samples/<application_folder>/out`.
 
-- All the 'Sample Applications' use a common 'aws iot config file' at the path `<sdk_path>/apps/talaria_two_aws/samples/aws_iot_config.h`.
+- Applications can have their own custom configurations for sdk based on their own needs, and the customized 'aws_iot_config.h' file can be included by individual apps at the time of compiling the AWS IoT SDK.
 
-- Other applications can have their own custom configurations based on their own needs, and the customized 'aws_iot_config.h' file can be included by individual apps at the time of compiling the AWS IoT SDK.
+- All the 'Sample Applications' use their own individually customizable 'aws iot config file' at the path `<sdk_path>/apps/talaria_two_aws/samples/<application_folder>/src/aws_iot_config.h`.
 
 ### Programming the Dev-Kits
 **Follow Application Note provided with the Talaria TWO SDK at the path `<sdk_path>/apps/iot_aws` for further details on programming certs, keys and executable binaries on Talaria TWO based EVB-A boards and running the Sample Applications / verifying the expected outputs using the Debug Console and AWS Web Console.**
@@ -61,9 +61,9 @@ The repo `talaria_two_aws` has the below directories/files:
 - directory `aws-iot-device-sdk-embedded-C`- Contains the AWS IoT Device SDK Embedded-C Release Tag v3.1.5.
 - directory `patches` - Contains patch file `t2_compatibility.patch` for AWS IoT Device SDK V3.1.5 for Talaria TWO compatibility.
 - directory `talaria_two_pal`- Its ‘Platform Adaptation Layer’ and contains Talaria TWO Platform specific porting needed to adapt to AWS IoT SDK.
-- directory `samples`- Samples provided by the AWS IoT SDK covering Thing Shadow, Jobs and Subscribe/Publish which are ported to Talaria TWO. Changes done for porting the sample Apps are related to APIs used to connect to the network, passing connection params as boot arguments and using rootFS for storing the certs and keys.
-- directory `root`: Provides the sample rootFS folder structure to be used while programming the AWS certs and keys to EVB-A for talaria_two_aws Sample Application.
-- file `Makefile`- Takes care of making the Sample App executable binaries and aws iot sdk libraries using AWS IoT SDK source files, Sample App source files and `<sdk_path>/apps/talaria_two_aws/samples/aws_iot_config.h`
+- directory `samples`- Samples provided by the AWS IoT SDK covering Thing Shadow, Jobs and Subscribe/Publish which are ported to Talaria TWO. Changes done for porting the sample Apps are related to APIs used to connect to the network, passing connection params as boot arguments and using dataFS for storing the certs and keys. A sensor2cloud-aws app for INP301x EVB's onboard sensors is also available here.
+- directory `data`: Provides the sample dataFS folder structure to be used while programming the AWS certs and keys to EVB-A for talaria_two_aws Sample Applications.
+- file `Makefile`- Generates the Sample App executable binaries and aws iot sdk libraries, using AWS IoT SDK source files, Sample App source files and `<sdk_path>/apps/talaria_two_aws/samples/<application_folder>/src/aws_iot_config.h`.
 
 ## Overview of Sample Applications
 
@@ -100,7 +100,7 @@ JSON formatted text as shown below should be used for publishing to T2.
 
 The application takes in the ssid, passphrase, aws host name, aws port and thing name (as client-id) as must provide bootArgs and publish_topic, subscribe_topic and suspend as optional bootArgs.
 
-Certs and keys are stored in rootFS and read from app specific paths defined in the sample code.
+Certs and keys are stored in dataFS and read from app specific paths defined in the sample code.
 
 ### Shadow Sample
 
@@ -173,7 +173,7 @@ The delta message will also contain the metadata with the timestamps.
 
 The application takes in ssid, passphrase, aws host name, aws port and thing name as must provide bootArgs and suspend as optional bootArgs.
 
-Certs and keys are stored in rootFS and read from app specific paths defined in the sample code.
+Certs and keys are stored in dataFS and read from app specific paths defined in the sample code.
 
 ### Jobs Sample
 This example takes the parameters from the aws_iot_config.h file and T2 boot arguments and establishes a connection to the AWS IoT MQTT Platform.
@@ -188,7 +188,27 @@ In the main body you can see how each callback is registered for each correspond
 
 The application takes in ssid, passphrase, aws host name, aws port and thing name as must provide bootArgs and suspend as optional bootArgs.
 
-Certs and keys are stored in rootFS and read from app specific paths defined in the sample code.
+Certs and keys are stored in dataFS and read from app specific paths defined in the sample code.
+
+### sensor2cloud-aws for sensors available onboard in INP301x EVBA
+This app is a reference example for sensor2cloud-aws usecase.
+This app is similar to 'Shadow Sample' app, uses same boot-args and uses data from sensors available onboard in INP301x EVBA instead of simulated data.
+Boot-args are also similar to 'Shadow Sample' with one more boot-arg added, named 'sensor_poll_interval'
+
+Below are the shadow attributes used by this application --
+
+    temperature
+    pressure
+    humidity
+    opticalPower
+    sensorPollInterval
+    sensorSwitch
+
+Sensor's values are read periodically every 'sensorPollInterval' seconds and sent to AWS IoT Thing Shadow associated with the thing_name passed in boot-arg, if 'sensorSwitch' is ON.
+If 'sensorSwitch' is OFF, no values are sent but the app waits for incoming delta callbacks for . 'sensorSwitch' and 'sensorPollInterval'.
+
+On boot, 'sensorSwitch' is forced to be ON ('true') and 'sensorPollInterval' is forced to be whatever value is passed using boot-arg 'sensor_poll_interval' (in seconds).
+Later this can be controlled by changing these attributes values in cloud and it takes effect on T2 running via shadow delta callbacks.
 
 
 ## Releases

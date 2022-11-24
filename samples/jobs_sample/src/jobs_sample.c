@@ -30,7 +30,7 @@
  *
  * The application takes in the host name, port and thing name as must provide bootArgs
  * and suspend as optional bootArgs.
- * Certs and keys are stored in rootFS and read from app specific paths defined in the
+ * Certs and keys are stored in file system and read from app specific paths defined in the
  * sample code.
  */
 #include <kernel/os.h>
@@ -565,8 +565,8 @@ int init_platform() {
 
 	rc = read_certs();
 	if(rc < 0) {
-		os_printf("Reading the certs and key in rooFS failed, cant proceed. \n"
-				"Please program needed files in rootFS...\n");
+		os_printf("Reading the certs and key in file system failed, cant proceed. \n"
+				"Please program needed files in file system...\n");
 		return rc;
 	}
 

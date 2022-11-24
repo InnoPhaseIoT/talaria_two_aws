@@ -1,0 +1,11 @@
+identity:
+    appId: iot-python-plotter
+auth:
+    key: a-dwd9ip-jz2cgteam5
+    token: AmfManUZQvOLkiKh8h
+options:
+    logLevel: debug
+    mqtt:
+        port: 8883
+        transport: tcp
+
