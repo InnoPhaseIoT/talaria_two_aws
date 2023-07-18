@@ -80,6 +80,24 @@ index 60c26086..47e2b476 100644
  	}
  #else
  #define IOT_ERROR(...)
+diff --git a/include/aws_iot_version.h b/include/aws_iot_version.h
+index 873949b0..ac04e85e 100644
+--- a/include/aws_iot_version.h
++++ b/include/aws_iot_version.h
+@@ -35,11 +35,11 @@
+ /**
+  * @brief MINOR version when functionality is added in a backwards-compatible manner.
+  */
+-#define VERSION_MINOR 0
++#define VERSION_MINOR 1
+ /**
+  * @brief PATCH version when backwards-compatible bug fixes are made.
+  */
+-#define VERSION_PATCH 1
++#define VERSION_PATCH 5
+ /**
+  * @brief TAG is an (optional) tag appended to the version if a more descriptive verion is needed.
+  */
 diff --git a/src/aws_iot_shadow.c b/src/aws_iot_shadow.c
 index 5c69edb0..6a0f8cf4 100644
 --- a/src/aws_iot_shadow.c
