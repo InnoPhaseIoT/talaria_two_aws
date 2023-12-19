@@ -423,11 +423,11 @@ enum bmp3_intf {
 };
 
 /********************************************************/
-
+struct i2c_device;
 /*!
  * @brief Type definitions
  */
-typedef int8_t (*bmp3_com_fptr_t)(uint32_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
+typedef int8_t (*bmp3_com_fptr_t)(struct i2c_device *dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
 typedef void (*bmp3_delay_fptr_t)(uint32_t period);
 
 /********************************************************/
@@ -779,7 +779,7 @@ struct bmp3_dev
     uint32_t chip_id;
 
     /*! Device Id */
-    uint32_t dev_id;
+    struct i2c_device *dev_id;
 
     /*! SPI/I2C interface */
     enum bmp3_intf intf;

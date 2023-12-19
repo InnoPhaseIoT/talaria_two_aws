@@ -1,7 +1,7 @@
 
 all:
-	cd samples/                    && $(MAKE) all
+	cd sample_apps/                    && $(MAKE) all
 
 clean:
-	cd samples/                    && $(MAKE) clean
+	cd sample_apps/                    && $(MAKE) clean
 

@@ -1,4 +1,4 @@
-ROOT_LOC=../../../..
+ROOT_LOC=../../../../..
 -include ${ROOT_LOC}/embedded_apps.mak
 SDK_DIR ?= $(ROOT_LOC)
 include $(ROOT_LOC)/build.mak
@@ -28,7 +28,7 @@ T2AWS_LOC = $(realpath $(ROOT_LOC))/apps/talaria_two_aws
 aws_iot_core_include=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/include/
 aws_iot_core_src=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/src/
 aws_iot_external_libs=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/external_libs/
-aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/
+aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/inno_os/
 
 # Logging level control
 #LOG_FLAGS += -DENABLE_IOT_DEBUG
@@ -85,11 +85,11 @@ $(objdir)/${lib_aws_iot_sdk_t2_pal_path}/libaws_iot_sdk_t2_pal.a: lib_objs = $(l
 
 # Reference -- add the application's .elf and .elf.strip targets here
 apps = \
-    subscribe_publish_sample.elf \
-    subscribe_publish_sample.elf.strip \
+    jobs_sample.elf \
+    jobs_sample.elf.strip \
 
 # Reference -- add the application's code paths here
-app_src=$(T2AWS_LOC)/samples/subscribe_publish_sample/src/
+app_src=$(T2AWS_LOC)/sample_apps/inno_os/jobs_sample/src/
 
 # Reference -- add the application's include paths here
 
@@ -103,16 +103,16 @@ LDFLAGS += --no-gc-sections
 
 # Reference -- add the application's source codes here
 
-#subscribe_publish_sample app code
-subscribe_publish_sample_obj = \
-    ${app_src}subscribe_publish_sample.o
+#jobs_sample app code
+jobs_sample_obj = \
+    ${app_src}jobs_sample.o
 
-subscribe_publish_sample-virt = yes
+jobs_sample-virt = yes
 
 # Reference -- add the libraries used by the Application, including aws_iot libraries created
-$(objdir)/subscribe_publish_sample.elf:LIBS = \
+$(objdir)/jobs_sample.elf:LIBS = \
     -lcomponents -laws_iot_sdk_t2 -laws_iot_sdk_t2_pal -lmbedtls -lwifi -llwip2 -limath -linnobase -ldragonfly
-$(objdir)/subscribe_publish_sample.elf: $(addprefix $(objdir)/,${subscribe_publish_sample_obj})
+$(objdir)/jobs_sample.elf: $(addprefix $(objdir)/,${jobs_sample_obj})
 
 #--------------------------------------------------------------------------------------------------------------------------------------------#
 

@@ -28,7 +28,7 @@ typedef struct {
 //int write_reg(bmp388_t *bmp388, uint8_t *data, uint16_t count);
 uint16_t bmp3_get_device_ID(struct bmp3_dev *dev);
 void bmp388_init(bmp388_t *bmp388,struct bmp3_dev *dev, struct i2c_bus *bus, uint8_t address);
-int16_t* get_sensor_data(struct bmp3_dev *dev);
+float* get_sensor_data(struct bmp3_dev *dev);
 int8_t set_normal_mode(struct bmp3_dev *dev);
 
 //int8_t bmp388_init(const struct bmp3_dev *dev,struct i2c_bus *bus);

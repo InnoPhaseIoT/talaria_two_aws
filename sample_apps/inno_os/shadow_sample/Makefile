@@ -1,4 +1,4 @@
-ROOT_LOC=../../../..
+ROOT_LOC=../../../../..
 -include ${ROOT_LOC}/embedded_apps.mak
 SDK_DIR ?= $(ROOT_LOC)
 include $(ROOT_LOC)/build.mak
@@ -22,13 +22,14 @@ aws_iot_libs = ${lib_aws_iot_sdk_t2_path}/libaws_iot_sdk_t2.a \
 create_lib_folder:
 	mkdir -p $(objdir)/${lib_aws_iot_sdk_t2_path}
 	mkdir -p $(objdir)/${lib_aws_iot_sdk_t2_pal_path}
+	echo "====$(T2AWS_LOC)"
 
 T2AWS_LOC = $(realpath $(ROOT_LOC))/apps/talaria_two_aws
 
 aws_iot_core_include=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/include/
 aws_iot_core_src=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/src/
 aws_iot_external_libs=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/external_libs/
-aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/
+aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/inno_os/
 
 # Logging level control
 #LOG_FLAGS += -DENABLE_IOT_DEBUG
@@ -89,7 +90,7 @@ apps = \
     shadow_sample.elf.strip
 
 # Reference -- add the application's code paths here
-app_src=$(T2AWS_LOC)/samples/shadow_sample/src/
+app_src=$(T2AWS_LOC)/sample_apps/inno_os/shadow_sample/src/
 
 # Reference -- add the application's include paths here
 
