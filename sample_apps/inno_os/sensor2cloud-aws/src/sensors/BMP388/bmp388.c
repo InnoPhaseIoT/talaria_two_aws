@@ -25,6 +25,7 @@
 
 
 #include <errno.h>
+#include <string.h>
 #include <inttypes.h>
 #include <kernel/console.h>
 #include <kernel/os.h>
@@ -34,14 +35,14 @@
 #include "bmp388.h"
 
 
-static int writeData(uint32_t dev_id , uint8_t command ,uint16_t len);
-static int readData(uint32_t dev_id,uint8_t *data, uint16_t len);
-int read_reg(uint32_t dev_id, uint8_t *data, uint16_t count);
-int write_reg(uint32_t dev_id, uint8_t *data, uint16_t count);
-int write_sensor_data(uint32_t dev_id,uint8_t *reg_address, uint8_t *reg_data, uint16_t len);
+static int writeData(struct i2c_device *dev_id , uint8_t command ,uint16_t len);
+static int readData(struct i2c_device *dev_id,uint8_t *data, uint16_t len);
+int read_reg(struct i2c_device *dev_id, uint8_t *data, uint16_t count);
+int write_reg(struct i2c_device *dev_id, uint8_t *data, uint16_t count);
+int write_sensor_data(struct i2c_device *dev_id,uint8_t *reg_address, uint8_t *reg_data, uint16_t len);
 
 
-int write_sensor_data(uint32_t dev_id,uint8_t *reg_address, uint8_t *reg_data, uint16_t len){
+int write_sensor_data(struct i2c_device *dev_id,uint8_t *reg_address, uint8_t *reg_data, uint16_t len){
 	uint8_t buff[2] = {0};
 	
 	struct i2c_msg msg;
@@ -57,7 +58,7 @@ int write_sensor_data(uint32_t dev_id,uint8_t *reg_address, uint8_t *reg_data, u
 
     msg.im_len = 2;
     msg.im_flags = I2C_M_STOP;
-    msg.im_buf = &buff;
+    msg.im_buf = buff;
     
 
     if ((i2c_result = i2c_transfer(dev_id, &msg, 1))){
@@ -67,14 +68,14 @@ int write_sensor_data(uint32_t dev_id,uint8_t *reg_address, uint8_t *reg_data, u
     return 0;
 }
 
-static int writeData(uint32_t dev_id, uint8_t command,uint16_t len)
+static int writeData(struct i2c_device *dev_id, uint8_t command,uint16_t len)
 {
     uint8_t command_byte = command;
     write_reg( dev_id,&command_byte, 1);
     return 0;
 }
 
-static int readData(uint32_t dev_id, uint8_t *data,uint16_t len)
+static int readData(struct i2c_device *dev_id, uint8_t *data,uint16_t len)
 {
     uint8_t buf[1];
     int ret = 0;
@@ -91,7 +92,7 @@ static int readData(uint32_t dev_id, uint8_t *data,uint16_t len)
     return ret;
 }
 
-int write_reg(uint32_t dev_id, uint8_t *data, uint16_t count)
+int write_reg(struct i2c_device *dev_id, uint8_t *data, uint16_t count)
 {
     struct i2c_msg msg;
     int i2c_result = 0;
@@ -113,7 +114,7 @@ int write_reg(uint32_t dev_id, uint8_t *data, uint16_t count)
     return i2c_result;
 }
 
-int read_reg(uint32_t dev_id, uint8_t *data, uint16_t count)
+int read_reg(struct i2c_device *dev_id, uint8_t *data, uint16_t count)
 {
     struct i2c_msg msg;
     int i2c_result = 0;
@@ -128,7 +129,7 @@ int read_reg(uint32_t dev_id, uint8_t *data, uint16_t count)
   
 
      if ((i2c_result = i2c_transfer(dev_id, &msg, 1))){
-	os_printf("bmp388 i2c read error %d: %d\n", i2c_result, strerror(-i2c_result));
+	os_printf("bmp388 i2c read error %d: %s\n", i2c_result, strerror(-i2c_result));
 	}
    
     return i2c_result;
@@ -139,8 +140,8 @@ uint16_t bmp3_get_device_ID(struct bmp3_dev *dev)
 
 	return dev->chip_id;
 }
-
-bmp3_read_data(uint32_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len){
+int8_t
+bmp3_read_data(struct i2c_device *dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len){
 	
 	
 	int error = writeData(dev_id,reg_addr,len);
@@ -150,8 +151,8 @@ bmp3_read_data(uint32_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t le
 	
 	return 0;
 }
-
-bmp3_write_data(uint32_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len){
+int8_t
+bmp3_write_data(struct i2c_device *dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len){
 	
 	write_sensor_data(dev_id,&reg_addr,reg_data,len);
 	
@@ -160,9 +161,7 @@ bmp3_write_data(uint32_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t l
 }
 
 void bmp388_init(bmp388_t *bmp388 ,struct bmp3_dev *dev , struct i2c_bus *bus, uint8_t address)
-{ 
-	uint8_t reg_data[BMP3_P_T_DATA_LEN] = { 0 };
-	int8_t rslt = BMP3_OK;
+{
 	
 	bmp388->dev = i2c_create_device(bus, address, I2C_CLK_400K);
 	
@@ -177,11 +176,10 @@ void bmp388_init(bmp388_t *bmp388 ,struct bmp3_dev *dev , struct i2c_bus *bus, u
 	
 }
 
-int16_t* get_sensor_data(struct bmp3_dev *dev)
+float * get_sensor_data(struct bmp3_dev *dev)
 {
     /* using fixed point mode*/
- 
-    int8_t rslt;
+
     static float sensor_data[2] = {0};
     /* Variable used to select the sensor component */
     uint8_t sensor_comp;
@@ -192,7 +190,7 @@ int16_t* get_sensor_data(struct bmp3_dev *dev)
     sensor_comp = BMP3_PRESS | BMP3_TEMP;
     
     /* Temperature and Pressure data are read and stored in the bmp3_data instance */
-    rslt = bmp3_get_sensor_data(sensor_comp, &data, dev);
+    bmp3_get_sensor_data(sensor_comp, &data, dev);
     sensor_data[0] = data.temperature;
     sensor_data[1] = data.pressure;
 

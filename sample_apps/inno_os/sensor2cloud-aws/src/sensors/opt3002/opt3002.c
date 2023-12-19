@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include <string.h>
 #include "opt3002.h"
 
-double pow(int base , double exponent){
+double powr(int base , double exponent){
 	int result =1;
 	for (int i = exponent; i>0;i--){
 		result = result * base; 	
@@ -133,7 +133,7 @@ static opt3002_light_t opt3002_readRegister(opt3002_t *opt3002, opt3002_command_
 		if (!error) {
 			result.raw = er;
 			if(!raw){
-			    result.lux = (1.2)*(pow(2, er.Exponent)*er.Result);
+			    result.lux = (1.2)*(powr(2, er.Exponent)*er.Result);
 			}
 		}
 		else {

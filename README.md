@@ -46,11 +46,11 @@ git clone --recursive https://github.com/InnoPhaseIoT/talaria_two_aws.git
 ### Compiling the AWS IoT SDK and the Sample Apps
 - Once the patch is applied successfully, running Make from `<sdk_path>/apps/talaria_two_aws` will compile the 'AWS IoT SDK' along with the Talaria TWO specific 'Platform Adaptation Layer' and 'Sample Applications' ported to Talaria TWO.
 
-- On running make, the binaries for the various Sample Apps will be created in folder 'out' in their individual path, e.g. `<sdk_path>/apps/talaria_two_aws/samples/<application_folder>/out`.
+- On running make, the binaries for the various Sample Apps will be created in folder 'out' in their individual path, e.g. `<sdk_path>/apps/talaria_two_aws/sample_apps/<platform>/<application_folder>/out`.
 
 - Applications can have their own custom configurations for sdk based on their own needs, and the customized 'aws_iot_config.h' file can be included by individual apps at the time of compiling the AWS IoT SDK.
 
-- All the 'Sample Applications' use their own individually customizable 'aws iot config file' at the path `<sdk_path>/apps/talaria_two_aws/samples/<application_folder>/src/aws_iot_config.h`.
+- All the 'Sample Applications' use their own individually customizable 'aws iot config file' at the path `<sdk_path>/apps/talaria_two_aws/sample_apps/<platform>/<application_folder>/src/aws_iot_config.h`.
 
 ### Programming the Dev-Kits
 **Follow Application Note provided with the Talaria TWO SDK at the path `<sdk_path>/apps/iot_aws` for further details on programming certs, keys and executable binaries on Talaria TWO based EVB-A boards and running the Sample Applications / verifying the expected outputs using the Debug Console and AWS Web Console.**
@@ -60,16 +60,16 @@ The repo `talaria_two_aws` has the below directories/files:
 
 - directory `aws-iot-device-sdk-embedded-C`- Contains the AWS IoT Device SDK Embedded-C Release Tag v3.1.5.
 - directory `patches` - Contains patch file `t2_compatibility.patch` for AWS IoT Device SDK V3.1.5 for Talaria TWO compatibility.
-- directory `talaria_two_pal`- Its ‘Platform Adaptation Layer’ and contains Talaria TWO Platform specific porting needed to adapt to AWS IoT SDK.
-- directory `samples`- Samples provided by the AWS IoT SDK covering Thing Shadow, Jobs and Subscribe/Publish which are ported to Talaria TWO. Changes done for porting the sample Apps are related to APIs used to connect to the network, passing connection params as boot arguments and using dataFS for storing the certs and keys. A sensor2cloud-aws app for INP301x EVB's onboard sensors is also available here.
+- directory `talaria_two_pal`- Its ‘Platform Adaptation Layer’ and contains Talaria TWO Platform specific porting needed to adapt to AWS IoT SDK. It contains PAL for 'inno_os' and 'freertos' based SDKs.
+- directory `sample_apps`- Samples provided by the AWS IoT SDK covering Thing Shadow, Jobs and Subscribe/Publish which are ported to Talaria TWO. Changes done for porting the sample Apps are related to APIs used to connect to the network, passing connection params as boot arguments and using dataFS for storing the certs and keys. A sensor2cloud-aws app for INP301x EVB's onboard sensors is also available here.
 - directory `data`: Provides the sample dataFS folder structure to be used while programming the AWS certs and keys to EVB-A for talaria_two_aws Sample Applications.
-- file `Makefile`- Generates the Sample App executable binaries and aws iot sdk libraries, using AWS IoT SDK source files, Sample App source files and `<sdk_path>/apps/talaria_two_aws/samples/<application_folder>/src/aws_iot_config.h`.
+- file `Makefile`- Generates the Sample App executable binaries and aws iot sdk libraries, using AWS IoT SDK source files, Sample App source files and `<sdk_path>/apps/talaria_two_aws/sample_apps/<platform>/<application_folder>/src/aws_iot_config.h`.
 
 ## Overview of Sample Applications
 
 <a name="sample-apps"></a>
 
-Sample Applications ported to the Talaria TWO Platform can be found in the path `/talaria_two_aws/samples`.
+Sample Applications ported to the Talaria TWO Platform can be found in the path `/talaria_two_aws/sample_apps/<platform>`.
 A brief overview of these apps is provided in this section.
 
 Follow Application Note provided with the Talaria TWO SDK at the path `<sdk_path>/apps/iot_aws` for further details on programming certs, keys and executable binaries on Talaria TWO based EVB-A boards and running the Sample Applications / verifying the expected outputs using the Debug Console and AWS Web Console.
