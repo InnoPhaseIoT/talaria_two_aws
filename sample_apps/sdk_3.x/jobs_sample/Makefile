@@ -1,17 +1,36 @@
-ROOT_LOC=../../../../..
--include ${ROOT_LOC}/embedded_apps.mak
-SDK_DIR ?= $(ROOT_LOC)
-include $(ROOT_LOC)/build.mak
-include $(SDK_DIR)/conf/sdk.mak
 
-targets= $(addprefix $(objdir)/,$(apps))
-create_aws_iot_libs= create_lib_folder $(addprefix $(objdir)/,$(aws_iot_libs))
-$(targets) : $(COMMON_FILES)
+TOP=../../../../..
+TOP := $(abspath $(TOP))
+-include $(TOP)/embedded_apps.mak
+SDK_DIR ?= $(TOP)
+ROOT_DIR := $(SDK_DIR)
+
+# basic rules and variables
+include $(ROOT_DIR)/build/rules.mak
+include $(TOP)/build.mak
+
+# enable below line to minimize compilation prints
+#VERBOSE ?= 0
+
+# rules.mak uses default libs.
+# if app needs custom libs, define it here.
+# example:
+LIBS = -lwifi -lrfdrv -llwip2 -lmbedtls -lsupplicant -ldragonfly -linnos
+LIBS += -laws_iot_sdk_t2 -laws_iot_sdk_t2_pal -lcomponents
+
+# to enable fast build using `ccache`, refer to
+# variable `FAST` in rules.mak
+
+# by default, `firmware-arm-virt.lds` is used.
+# for small size elfs, use the `firmware-arm-ram.lds` by enabling below line
+#LDFILE := $(BUILD_DIR)/firmware-arm-ram.lds
 
 all:
 	$(MAKE) libcomponents
 	$(MAKE) $(create_aws_iot_libs)
-	$(MAKE) $(targets)
+	$(MAKE) $(TARGETS)
+
+create_aws_iot_libs= create_lib_folder $(addprefix $(objdir)/,$(aws_iot_libs))
 
 lib_aws_iot_sdk_t2_path=lib/aws_iot_sdk_t2/
 lib_aws_iot_sdk_t2_pal_path=lib/aws_iot_sdk_t2_pal/
@@ -22,13 +41,16 @@ aws_iot_libs = ${lib_aws_iot_sdk_t2_path}/libaws_iot_sdk_t2.a \
 create_lib_folder:
 	mkdir -p $(objdir)/${lib_aws_iot_sdk_t2_path}
 	mkdir -p $(objdir)/${lib_aws_iot_sdk_t2_pal_path}
+	#echo "==== T2AWS_LOC --> $(T2AWS_LOC) ===="
 
-T2AWS_LOC = $(realpath $(ROOT_LOC))/apps/talaria_two_aws
+T2AWS_LOC = $(TOP)/apps/talaria_two_aws
 
 aws_iot_core_include=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/include/
 aws_iot_core_src=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/src/
 aws_iot_external_libs=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/external_libs/
-aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/inno_os/
+aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/sdk_3.x/
+
+# define custom CFLAGS here.
 
 # Logging level control
 #LOG_FLAGS += -DENABLE_IOT_DEBUG
@@ -41,6 +63,7 @@ CFLAGS += $(LOG_FLAGS)
 CFLAGS += -I${aws_iot_core_include} -I${aws_iot_sdk_t2_pal}include \
 			-I${aws_iot_external_libs}/jsmn
 CPPFLAGS += -D_ENABLE_THREAD_SUPPORT_
+
 
 #aws iot core code
 aws_iot_core = \
@@ -83,13 +106,11 @@ $(objdir)/${lib_aws_iot_sdk_t2_pal_path}/libaws_iot_sdk_t2_pal.a: lib_objs = $(l
 
 #------------------------------------------------------Application-Specific Section----------------------------------------------------------#
 
-# Reference -- add the application's .elf and .elf.strip targets here
-apps = \
-    jobs_sample.elf \
-    jobs_sample.elf.strip \
+# Reference -- add the application's .elf targets here
+APP := jobs_sample.elf
 
 # Reference -- add the application's code paths here
-app_src=$(T2AWS_LOC)/sample_apps/inno_os/jobs_sample/src/
+app_src=$(T2AWS_LOC)/sample_apps/sdk_3.x/jobs_sample/src
 
 # Reference -- add the application's include paths here
 
@@ -102,21 +123,17 @@ LDFLAGS += -L$(objdir)/${lib_aws_iot_sdk_t2_pal_path}
 LDFLAGS += --no-gc-sections
 
 # Reference -- add the application's source codes here
-
 #jobs_sample app code
-jobs_sample_obj = \
-    ${app_src}jobs_sample.o
+JOBS_SAMPLE_SRC_FILES += ${app_src}/jobs_sample.o
+JOBS_SAMPLE_OBJ_FILES := $(addprefix $(OUTDIR),$(JOBS_SAMPLE_SRC_FILES:%.c=%.o))
+$(OUTDIR)/$(APP)   :  $(JOBS_SAMPLE_OBJ_FILES)
 
-jobs_sample-virt = yes
-
-# Reference -- add the libraries used by the Application, including aws_iot libraries created
-$(objdir)/jobs_sample.elf:LIBS = \
-    -lcomponents -laws_iot_sdk_t2 -laws_iot_sdk_t2_pal -lmbedtls -lwifi -llwip2 -limath -linnobase -ldragonfly
-$(objdir)/jobs_sample.elf: $(addprefix $(objdir)/,${jobs_sample_obj})
+ALL_APPS := $(APP)
+ALL_APPS := $(ALL_APPS) $(ALL_APPS:%.elf=%.elf.strip)
+TARGETS  := $(addprefix $(OUTDIR)/,$(ALL_APPS))
 
 #--------------------------------------------------------------------------------------------------------------------------------------------#
-
 clean:
-	rm -rf $(objdir)
+	-rm -rf $(OUTDIR)
 
--include ${DEPS}
+include $(BUILD_DIR)/sdk.mak

@@ -28,7 +28,7 @@ T2AWS_LOC = $(realpath $(ROOT_LOC))/apps/talaria_two_aws
 aws_iot_core_include=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/include/
 aws_iot_core_src=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/src/
 aws_iot_external_libs=$(T2AWS_LOC)/aws-iot-device-sdk-embedded-C/external_libs/
-aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/inno_os/
+aws_iot_sdk_t2_pal=$(T2AWS_LOC)/talaria_two_pal/sdk_2.x/
 
 # Logging level control
 #LOG_FLAGS += -DENABLE_IOT_DEBUG
@@ -89,8 +89,8 @@ apps = \
     sensor2cloud-aws_inp301x_app.elf.strip
 
 # Reference -- add the application's code paths here
-app_src=$(T2AWS_LOC)/sample_apps/inno_os/sensor2cloud-aws/src/sensor2cloud-aws_inp301x_app/
-sensor_src=$(T2AWS_LOC)/sample_apps/inno_os/sensor2cloud-aws/src/sensors/
+app_src=$(T2AWS_LOC)/sample_apps/sdk_2.x/sensor2cloud-aws/src/sensor2cloud-aws_inp301x_app/
+sensor_src=$(T2AWS_LOC)/sample_apps/sdk_2.x/sensor2cloud-aws/src/sensors/
 
 # Reference -- add the application's include paths here
 CFLAGS += -I${sensor_src} -I${sensor_src}/dtoa \

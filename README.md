@@ -60,7 +60,7 @@ The repo `talaria_two_aws` has the below directories/files:
 
 - directory `aws-iot-device-sdk-embedded-C`- Contains the AWS IoT Device SDK Embedded-C Release Tag v3.1.5.
 - directory `patches` - Contains patch file `t2_compatibility.patch` for AWS IoT Device SDK V3.1.5 for Talaria TWO compatibility.
-- directory `talaria_two_pal`- Its ‘Platform Adaptation Layer’ and contains Talaria TWO Platform specific porting needed to adapt to AWS IoT SDK. It contains PAL for 'inno_os' and 'freertos' based SDKs.
+- directory `talaria_two_pal`- Its ‘Platform Adaptation Layer’ and contains Talaria TWO Platform specific porting needed to adapt to AWS IoT SDK. It contains PAL for 'sdk_2.x' and 'sdk_3.x' based SDKs.
 - directory `sample_apps`- Samples provided by the AWS IoT SDK covering Thing Shadow, Jobs and Subscribe/Publish which are ported to Talaria TWO. Changes done for porting the sample Apps are related to APIs used to connect to the network, passing connection params as boot arguments and using dataFS for storing the certs and keys. A sensor2cloud-aws app for INP301x EVB's onboard sensors is also available here.
 - directory `data`: Provides the sample dataFS folder structure to be used while programming the AWS certs and keys to EVB-A for talaria_two_aws Sample Applications.
 - file `Makefile`- Generates the Sample App executable binaries and aws iot sdk libraries, using AWS IoT SDK source files, Sample App source files and `<sdk_path>/apps/talaria_two_aws/sample_apps/<platform>/<application_folder>/src/aws_iot_config.h`.
